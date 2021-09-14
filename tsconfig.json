@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "es2020"
+        ],
+        "experimentalDecorators": true,
+        "strictNullChecks": true,
+        "module": "commonjs",
+        "target": "es2015",
+        "sourceMap": false,
+        "emitDecoratorMetadata": true,
+        "outDir": "dest",
+        "resolveJsonModule": true,
+        "noEmit": false,
+        "removeComments": true,
+        "declaration": false
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "tests",
+        "**/__mocks__",
+        "sql",
+        "examples",
+        "media",
+        ".github"
+    ]
+}
