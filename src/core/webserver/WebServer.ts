@@ -7,23 +7,25 @@ import HttpError from "../errors/HttpError";
 import * as shutdown from "koa-graceful-shutdown";
 import Destructable from "../interfaces/Destructable";
 import Controller from "./Controller";
+import * as BodyParser from "koa-bodyparser";
 
 class WebServer extends Koa implements Destructable {
     protected readonly router: Router;
     public port: number;
     private session: Server | null;
 
-    public constructor(config: any = {}) {
+    public constructor(config: WebServer.Config = {}) {
         super();
         this.session = null;
         this.router = new Router();
         this.port = config?.port || 22233;
 
+        this.use(async (ctx: Context, next: Next) => await WebServer.httpErrorsMiddleware(ctx, next));
+        this.use(BodyParser());
 
-        const controllers: typeof Controller[] = config.controllers;
+        const controllers = config.controllers || [];
         for (const controller of controllers) {
-            const instance: Controller = new controller();
-            this.router.use(instance.baseRoute, instance.routes(), instance.allowedMethods());
+            this.router.use(controller.baseRoute, controller.routes(), controller.allowedMethods());
         }
         this.use(this.router.routes());
     }
@@ -86,7 +88,10 @@ class WebServer extends Koa implements Destructable {
 }
 
 namespace WebServer {
-
+    export interface Config {
+        controllers?: Controller[];
+        port?: number;
+    }
 }
 
 export default WebServer;
