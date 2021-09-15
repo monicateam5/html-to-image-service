@@ -1,6 +1,5 @@
 import Controller from "../core/webserver/Controller";
 import {Context} from "koa";
-import JSONObject from "../core/interfaces/JSONObject";
 import * as nodeHtmlToImage from "node-html-to-image";
 
 
@@ -11,16 +10,12 @@ class PulseController extends Controller {
         const text: string = ctx.request.body?.text || "";
 
         // @ts-ignore
-        nodeHtmlToImage({
-            output: "./image.png",
+        const image = await nodeHtmlToImage({
             html: text,
-        }).then(() => console.log("The image was created successfully!"));
+        });
 
-
-        ctx.body = {
-            application: "html-to-image-service",
-            version: "UNKNOWN",
-        };
+        ctx.res.writeHead(200, {'Content-Type': 'image/png'})
+        ctx.res.end(image, 'binary');
     }
 
 }
