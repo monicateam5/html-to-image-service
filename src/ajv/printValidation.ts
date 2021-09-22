@@ -23,39 +23,28 @@
  *
  */
 
-import {createLogger, format, Logger as LoggerType, transports} from "winston";
-import * as Transport from "winston-transport";
-import * as moment from "moment";
+import Ajv, {ValidateFunction, Schema} from "ajv";
+import {Context, Next} from "koa";
+import HttpError from "../core/errors/HttpError";
 
 
-export let Logger: LoggerType;
+const ajv: Ajv = new Ajv();
 
-const Colors = {
-    info: "\x1b[34m",
-    error: "\x1b[31m",
-    warn: "\x1b[33m",
-    debug: "\x1b[32m",
-    silly: "\x1b[36m",
+const schema: Schema = {
+    type: "object",
+    properties: {
+        text: {type: "string"},
+    },
+    required: [],
+    additionalProperties: false,
 };
 
-/**
- * initLogger - creates logger.
- * @function
- * @author Danil Andreev
- */
-export function initLogger(logLevel: string = "error"): LoggerType {
+const validate: ValidateFunction = ajv.compile(schema);
 
-    const logFormat = format.printf(({level, message, label, timestamp}) => {
-        const host: string | undefined = process.env.COMPUTERNAME;
-        return `${Colors[level] || ""}(${host})  ${label}[${moment(timestamp).format("LLL")}] <${level}>: ${message}`;
-    });
-
-    const logTransports: Transport[] = [new transports.Console()];
-
-    Logger = createLogger({
-        level: logLevel,
-        format: format.combine(format.label({label: "GHTB"}), format.timestamp(), logFormat),
-        transports: logTransports,
-    });
-    return Logger;
+export default async function printValidationMiddleware(ctx: Context, next: Next) {
+    const isValid: boolean = validate(ctx.request.body);
+    if (!isValid)
+        throw new HttpError("Validation error: " + JSON.stringify(validate.errors), 201);
+    else
+        await next();
 }
