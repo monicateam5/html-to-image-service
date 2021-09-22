@@ -31,5 +31,5 @@ export default async function main(): Promise<void> {
     const server = new WebServer({
         controllers: [new PulseController(), new RenderController()],
     });
-    await server.start(22233);
+    await server.start(Number(process.env?.PORT) || 22233);
 }

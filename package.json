@@ -55,8 +55,7 @@
   },
   "scripts": {
     "build:compile": "tsc",
-    "build:copyfiles": "copyfiles --up 1 \"./src/**/*.hbs\" \"./dest/\" --verbose --error",
-    "build": "yarn run build:compile && yarn run build:copyfiles",
+    "build": "yarn run build:compile",
     "start:dev": "ts-node",
     "start": "node dest/index.js",
     "prettier-format": "prettier --config .prettierrc.yaml \"src/**/*.ts\" --write",
