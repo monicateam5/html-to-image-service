@@ -25,7 +25,6 @@
 
 import JSONObject from "../interfaces/JSONObject";
 
-
 /**
  * HttpError - class for HTTP exchange error.
  * @class
@@ -90,8 +89,7 @@ class HttpError extends Error {
      * @author Danil Andreev
      */
     public getResponseMessage(): string | JSONObject {
-        if (this.data)
-            return {message: this.message, code: this.code, ...this.data};
+        if (this.data) return {message: this.message, code: this.code, ...this.data};
         return `Error: ${this.code}. ${this.message}`;
     }
 }

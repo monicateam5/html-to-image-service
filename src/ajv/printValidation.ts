@@ -27,7 +27,6 @@ import Ajv, {ValidateFunction, Schema} from "ajv";
 import {Context, Next} from "koa";
 import HttpError from "../core/errors/HttpError";
 
-
 const ajv: Ajv = new Ajv();
 
 const schema: Schema = {
@@ -43,8 +42,6 @@ const validate: ValidateFunction = ajv.compile(schema);
 
 export default async function printValidationMiddleware(ctx: Context, next: Next) {
     const isValid: boolean = validate(ctx.request.body);
-    if (!isValid)
-        throw new HttpError("Validation error: " + JSON.stringify(validate.errors), 201);
-    else
-        await next();
+    if (!isValid) throw new HttpError("Validation error: " + JSON.stringify(validate.errors), 201);
+    else await next();
 }

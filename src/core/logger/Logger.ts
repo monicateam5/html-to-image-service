@@ -27,7 +27,6 @@ import {createLogger, format, Logger as LoggerType, transports} from "winston";
 import * as Transport from "winston-transport";
 import * as moment from "moment";
 
-
 export let Logger: LoggerType;
 
 const Colors = {
@@ -44,7 +43,6 @@ const Colors = {
  * @author Danil Andreev
  */
 export function initLogger(logLevel: string = "error"): LoggerType {
-
     const logFormat = format.printf(({level, message, label, timestamp}) => {
         const host: string | undefined = process.env.COMPUTERNAME;
         return `${Colors[level] || ""}(${host})  ${label}[${moment(timestamp).format("LLL")}] <${level}>: ${message}`;

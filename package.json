@@ -1,7 +1,7 @@
 {
   "name": "html-to-image-service",
   "version": "1.0.0",
-  "description": "Html to image render microservice.",
+  "description": "Html to image rendering microservice.",
   "keywords": [
     "html",
     "image",
@@ -11,13 +11,13 @@
     "png",
     "jpg"
   ],
-  "homepage": "",
+  "homepage": "https://github.com/DanilAndreev/html-to-image-service",
   "repository": {
-    "url": "",
+    "url": "https://github.com/DanilAndreev/html-to-image-service.git",
     "type": "git"
   },
   "bugs": {
-    "url": "",
+    "url": "https://github.com/DanilAndreev/html-to-image-service/issues",
     "email": "danssg08@gmail.com"
   },
   "author": {
@@ -25,7 +25,7 @@
     "email": "danssg08@gmail.com",
     "url": "https://github.com/DanilAndreev"
   },
-  "main": "index.js",
+  "main": "dest/index.js",
   "license": "MIT",
   "devDependencies": {
     "@types/koa": "^2.13.4",
@@ -33,6 +33,9 @@
     "@types/koa-cors": "^0.0.2",
     "@types/koa-router": "^7.4.4",
     "@types/node": "^16.9.1",
+    "copyfiles": "^2.4.1",
+    "eslint": "^7.32.0",
+    "prettier": "^2.4.1",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   },
@@ -49,5 +52,15 @@
     "reflect-metadata": "^0.1.13",
     "winston": "^3.3.3",
     "winston-transport": "^4.4.0"
+  },
+  "scripts": {
+    "build:compile": "tsc",
+    "build:copyfiles": "copyfiles --up 1 \"./src/**/*.hbs\" \"./dest/\" --verbose --error",
+    "build": "yarn run build:compile && yarn run build:copyfiles",
+    "start:dev": "ts-node",
+    "start": "node dest/index.js",
+    "prettier-format": "prettier --config .prettierrc.yaml \"src/**/*.ts\" --write",
+    "lint": "eslint src --ext .ts",
+    "test": "jest"
   }
 }

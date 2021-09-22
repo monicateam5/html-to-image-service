@@ -28,7 +28,6 @@ import {Context} from "koa";
 import * as nodeHtmlToImage from "node-html-to-image";
 import printValidationMiddleware from "../ajv/printValidation";
 
-
 const style: string = `
 @page {
   size: A4;
@@ -52,12 +51,12 @@ class PulseController extends Controller {
         // @ts-ignore
         const image = await nodeHtmlToImage({
             html: text,
-            beforeScreenshot: async (page) => {
+            beforeScreenshot: async page => {
                 await page.emulateMedia("print");
                 await page.addStyleTag({
-                    content: style
+                    content: style,
                 });
-            }
+            },
         });
 
         ctx.res.writeHead(200, {"Content-Type": "image/png"});

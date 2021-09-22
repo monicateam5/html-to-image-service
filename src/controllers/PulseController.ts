@@ -26,7 +26,6 @@
 import Controller from "../core/webserver/Controller";
 import {Context} from "koa";
 
-
 @Controller.HTTPController("")
 class PulseController extends Controller {
     @Controller.Route("GET", "/health")

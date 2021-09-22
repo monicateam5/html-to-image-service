@@ -34,7 +34,6 @@ import Destructable from "../interfaces/Destructable";
 import Controller from "./Controller";
 import * as BodyParser from "koa-bodyparser";
 
-
 class WebServer extends Koa implements Destructable {
     protected readonly router: Router;
     public port: number;

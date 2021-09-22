@@ -27,7 +27,6 @@ import * as Router from "koa-router";
 import {Middleware} from "koa";
 import JSONObject from "../interfaces/JSONObject";
 
-
 /**
  * Controller - basic controller class for Server.
  * @class
@@ -101,13 +100,8 @@ namespace Controller {
      * @author Danil Andreev
      */
     export function Route(method: "GET" | "POST" | "PUT" | "DELETE", route: string = "/") {
-        return (
-            target: Controller,
-            propertyKey: string,
-            descriptor: PropertyDescriptor,
-        ) => {
-            if (!Reflect.getMetadata("routes", target))
-                Reflect.defineMetadata("routes", {}, target);
+        return (target: Controller, propertyKey: string, descriptor: PropertyDescriptor) => {
+            if (!Reflect.getMetadata("routes", target)) Reflect.defineMetadata("routes", {}, target);
 
             const routes: JSONObject<RouteMeta> = Reflect.getMetadata("routes", target);
             routes[propertyKey] = {...routes[propertyKey], method, route};
@@ -119,13 +113,8 @@ namespace Controller {
      * @author Danil Andreev
      */
     export function RouteMiddleware(...middlewares: Middleware<any>[]) {
-        return (
-            target: Controller,
-            propertyKey: string,
-            descriptor: PropertyDescriptor,
-        ) => {
-            if (!Reflect.getMetadata("routes", target))
-                Reflect.defineMetadata("routes", {}, target);
+        return (target: Controller, propertyKey: string, descriptor: PropertyDescriptor) => {
+            if (!Reflect.getMetadata("routes", target)) Reflect.defineMetadata("routes", {}, target);
 
             const routes: JSONObject<RouteMeta> = Reflect.getMetadata("routes", target);
             if (!routes[propertyKey]) routes[propertyKey] = {...routes[propertyKey], middlewares: []};
@@ -140,13 +129,8 @@ namespace Controller {
      * @author Danil Andreev
      */
     export function RouteValidation(validation: Middleware<any>) {
-        return (
-            target: Controller,
-            propertyKey: string,
-            descriptor: PropertyDescriptor,
-        ) => {
-            if (!Reflect.getMetadata("routes", target))
-                Reflect.defineMetadata("routes", {}, target);
+        return (target: Controller, propertyKey: string, descriptor: PropertyDescriptor) => {
+            if (!Reflect.getMetadata("routes", target)) Reflect.defineMetadata("routes", {}, target);
 
             const routes: JSONObject<RouteMeta> = Reflect.getMetadata("routes", target);
 
@@ -162,7 +146,7 @@ namespace Controller {
      * @author Danil Andreev
      */
     export function NestedController(controller: typeof Controller, baseRoute?: string) {
-        return function HTTPControllerWrapper<T extends new(...args: any[]) => {}>(objectConstructor: T): T {
+        return function HTTPControllerWrapper<T extends new (...args: any[]) => {}>(objectConstructor: T): T {
             return class WrappedController extends objectConstructor {
                 constructor(...args: any[]) {
                     super(args);
@@ -184,7 +168,7 @@ namespace Controller {
      * @author Danil Andreev
      */
     export function HTTPController(baseRoute: string = "") {
-        return function HTTPControllerWrapper<T extends new(...args: any[]) => {}>(objectConstructor: T): T {
+        return function HTTPControllerWrapper<T extends new (...args: any[]) => {}>(objectConstructor: T): T {
             return class WrappedController extends objectConstructor {
                 constructor(...args: any[]) {
                     super(args);
@@ -212,7 +196,9 @@ namespace Controller {
                                         this.delete(route.route, ...middlewares, callback);
                                         break;
                                     default:
-                                        throw new TypeError(`Incorrect value of 'method', expected "'GET' | 'POST' | 'PUT' | 'DELETE'", got ${route.method}`);
+                                        throw new TypeError(
+                                            `Incorrect value of 'method', expected "'GET' | 'POST' | 'PUT' | 'DELETE'", got ${route.method}`
+                                        );
                                 }
                             }
                         }
