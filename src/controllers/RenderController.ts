@@ -49,6 +49,9 @@ class PulseController extends Controller {
     public async render(ctx: Context): Promise<void> {
         const text: string = ctx.request.body?.text || "";
 
+        //TODO: fix library and update.
+
+        /* eslint-disable @typescript-eslint/ban-ts-comment */
         // @ts-ignore
         const image = await nodeHtmlToImage({
             html: text,
