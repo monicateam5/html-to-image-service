@@ -1,0 +1,34 @@
+name: Pulbish docker image
+
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+
+jobs:
+  ghcr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - if: ${{github.event.release.tag_name}}
+        name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with: 
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          repository: danilandreev/html-to-image-service
+          build_args: VERSION=${{ github.event.release.tag_name }}
+          tags: latest, ${{ github.event.release.tag_name }}
+
+      - if: ${{!github.event.release.tag_name}}
+        name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with: 
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          build_args: VERSION=${{ github.event.after }}
+          repository: danilandreev/html-to-image-service
+          tags: latest
