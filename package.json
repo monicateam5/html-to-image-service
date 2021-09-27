@@ -1,6 +1,6 @@
 {
   "name": "html-to-image-service",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "description": "Html to image rendering microservice.",
   "keywords": [
     "html",
