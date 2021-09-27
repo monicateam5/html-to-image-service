@@ -28,6 +28,7 @@ import {Context} from "koa";
 import * as nodeHtmlToImage from "node-html-to-image";
 import printValidationMiddleware from "../ajv/printValidation";
 
+
 const style: string = `
 @page {
   size: A4;
@@ -56,6 +57,9 @@ class PulseController extends Controller {
                 await page.addStyleTag({
                     content: style,
                 });
+            },
+            puppeteerArgs: {
+                args: ["--no-sandbox"],
             },
         });
 

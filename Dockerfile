@@ -10,21 +10,46 @@ RUN yarn --frozen-lockfile install
 COPY . .
 RUN npm run build:compile
 
-FROM node:12
+FROM node:12-slim
 ENV PORT $PORT
 
-RUN apt-get update \
-    && apt-get install -y wget gnupg \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-      --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
+RUN apt-get update
+RUN apt-get install -y \
+    fonts-liberation \
+    gconf-service \
+    libappindicator1 \
+    libasound2 \
+    libatk1.0-0 \
+    libcairo2 \
+    libcups2 \
+    libfontconfig1 \
+    libgbm-dev \
+    libgdk-pixbuf2.0-0 \
+    libgtk-3-0 \
+    libicu-dev \
+    libjpeg-dev \
+    libnspr4 \
+    libnss3 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libpng-dev \
+    libx11-6 \
+    libx11-xcb1 \
+    libxcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxi6 \
+    libxrandr2 \
+    libxrender1 \
+    libxss1 \
+    libxtst6 \
+    xdg-utils
 
-RUN apt-get install libxtst6
 
-#RUN mkdir /dest
+RUN mkdir /dest
 COPY --from=build dest/ dest/
 COPY --from=build LICENSE /
 COPY --from=build package.json /
@@ -34,9 +59,19 @@ WORKDIR /
 
 # Installing production version of node modules
 RUN yarn --frozen-lockfile install --production
+
+RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+    && mkdir -p /home/pptruser/Downloads \
+    && chown -R pptruser:pptruser /home/pptruser \
+    && chown -R pptruser:pptruser /node_modules \
+    && chown -R pptruser:pptruser /package.json \
+    && chown -R pptruser:pptruser /yarn.lock
+
 # Expose ports
 EXPOSE $PORT
 
+USER pptruser
 
-#CMD ["google-chrome-stable && node /dest/index.js"]
-CMD ["google-chrome-stable"]
+RUN chmod -R o+rwx node_modules/puppeteer/.local-chromium
+
+CMD ["node", "/dest/index.js"]
