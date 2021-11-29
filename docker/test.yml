@@ -3,7 +3,7 @@ services:
 
   html2image:
     container_name: html2image
-    build: .
+    build: ../
     image: adele.html2image
     restart: always
     networks:
