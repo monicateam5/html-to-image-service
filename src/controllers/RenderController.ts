@@ -44,7 +44,7 @@ const style: string = `
 
 @Controller.HTTPController("/render")
 class PulseController extends Controller {
-    @Controller.Route("GET", "/print")
+    @Controller.Route("POST", "/print")
     @Controller.RouteValidation(printValidationMiddleware)
     public async render(ctx: Context): Promise<void> {
         const text: string = ctx.request.body?.text || "";
