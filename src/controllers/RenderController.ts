@@ -24,8 +24,8 @@
  */
 
 import Controller from "../core/webserver/Controller";
-import {Context} from "koa";
-import * as nodeHtmlToImage from "node-html-to-image";
+import { Context } from "koa";
+import { default as nodeHtmlToImage } from "node-html-to-image";
 import printValidationMiddleware from "../ajv/printValidation";
 
 
@@ -44,31 +44,44 @@ const style: string = `
 
 @Controller.HTTPController("/render")
 class PulseController extends Controller {
-    @Controller.Route("POST", "/print")
-    @Controller.RouteValidation(printValidationMiddleware)
-    public async render(ctx: Context): Promise<void> {
-        const text: string = ctx.request.body?.text || "";
+  @Controller.Route("POST", "/print")
+  @Controller.RouteValidation(printValidationMiddleware)
+  public async render(ctx: Context): Promise<void> {
+    const text: string = ctx.request.body?.text || "";
 
-        //TODO: fix library and update.
+    //TODO: fix library and update.
 
-        /* eslint-disable @typescript-eslint/ban-ts-comment */
-        // @ts-ignore
-        const image = await nodeHtmlToImage({
-            html: text,
-            beforeScreenshot: async page => {
-                await page.emulateMedia("print");
-                await page.addStyleTag({
-                    content: style,
-                });
-            },
-            puppeteerArgs: {
-                args: ["--no-sandbox"],
-            },
-        });
+    /* eslint-disable @typescript-eslint/ban-ts-comment */
+    // @ts-ignore
 
-        ctx.res.writeHead(200, {"Content-Type": "image/png"});
-        ctx.res.end(image, "binary");
+    try {
+
+      const image = await nodeHtmlToImage({
+        html: text,
+        type: 'jpeg',
+        beforeScreenshot: async page => {
+          try {
+            await page.emulateMedia("print");
+            await page.addStyleTag({
+              content: style,
+            });
+          } catch (e) {
+            console.error('beforeScreenshot', e);
+          }
+        },
+        puppeteerArgs: {
+          args: ["--no-sandbox"],
+        },
+      });
+
+      ctx.res.writeHead(200, { "Content-Type": "image/jpeg" });
+      ctx.res.end(image, "binary");
+
+    } catch (e) {
+      console.error('nodeHtmlToImage', e);
     }
+
+  }
 }
 
 export default PulseController;
