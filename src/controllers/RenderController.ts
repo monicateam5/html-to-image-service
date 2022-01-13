@@ -70,9 +70,9 @@ class PulseController extends Controller {
             console.error('beforeScreenshot', e);
           }
         },
-        // puppeteerArgs: {
-        //   args: ["--no-sandbox"],
-        // },
+        puppeteerArgs: {
+          args: ["--no-sandbox"],
+        },
       });
 
       ctx.res.writeHead(200, { "Content-Type": "image/jpeg" });
