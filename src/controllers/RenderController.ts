@@ -27,8 +27,7 @@ import Controller from "../core/webserver/Controller";
 import { Context } from "koa";
 //import { default as nodeHtmlToImage } from "node-html-to-image";
 import printValidationMiddleware from "../ajv/printValidation";
-import nodeHtmlToImage from 'node-html-to-image'
-//const nodeHtmlToImage = require('node-html-to-image');
+const nodeHtmlToImage = require('node-html-to-image');
 
 const style: string = `
 @page {
