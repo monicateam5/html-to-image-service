@@ -80,7 +80,11 @@ class PulseController extends Controller {
 
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
-
+      await page.emulateMedia("print");
+      await page.addStyleTag({
+        content: style,
+      });
+      
       await page.setContent(text);
 
       const content = await page.$("body");
