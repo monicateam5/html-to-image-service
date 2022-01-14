@@ -27,7 +27,10 @@ import Controller from "../core/webserver/Controller";
 import { Context } from "koa";
 //import { default as nodeHtmlToImage } from "node-html-to-image";
 import printValidationMiddleware from "../ajv/printValidation";
-const nodeHtmlToImage = require('node-html-to-image');
+//const nodeHtmlToImage = require('node-html-to-image');
+//import puppeteer from "puppeteer";
+const puppeteer = require('puppeteer')
+
 
 const style: string = `
 @page {
@@ -56,27 +59,40 @@ class PulseController extends Controller {
 
     try {
 
-      const image = await nodeHtmlToImage({
-        html: text,
-        type: 'jpeg',
-        beforeScreenshot: async page => {
-          try {
-            await page.emulateMedia("print");
-            await page.addStyleTag({
-              content: style,
-            });
-          } catch (e) {
-            console.error('beforeScreenshot', e);
-          }
-        },
-        puppeteerArgs: {
-          args: ['--disable-gpu', '--no-sandbox', '--single-process',  '--disable-web-security'],
-          ignoreDefaultArgs: ["--disable-extensions"]
-        },
-      });
+      // const image = await nodeHtmlToImage({
+      //   html: text,
+      //   type: 'jpeg',
+      //   beforeScreenshot: async page => {
+      //     try {
+      //       await page.emulateMedia("print");
+      //       await page.addStyleTag({
+      //         content: style,
+      //       });
+      //     } catch (e) {
+      //       console.error('beforeScreenshot', e);
+      //     }
+      //   },
+      //   puppeteerArgs: {
+      //     args: ['--disable-gpu', '--no-sandbox', '--single-process',  '--disable-web-security'],
+      //     ignoreDefaultArgs: ["--disable-extensions"]
+      //   },
+      // });
+
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+
+      await page.setContent(text);
+
+      const content = await page.$("body");
+      const imageBuffer = await content.screenshot({ omitBackground: true });
+
+      await page.close();
+      await browser.close();
+
+
 
       ctx.res.writeHead(200, { "Content-Type": "image/jpeg" });
-      ctx.res.end(image, "binary");
+      ctx.res.end(imageBuffer, "binary");
 
     } catch (e) {
       console.error('nodeHtmlToImage', e);
