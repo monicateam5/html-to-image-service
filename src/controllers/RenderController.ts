@@ -27,8 +27,8 @@ import Controller from "../core/webserver/Controller";
 import { Context } from "koa";
 //import { default as nodeHtmlToImage } from "node-html-to-image";
 import printValidationMiddleware from "../ajv/printValidation";
-
-const nodeHtmlToImage = require('node-html-to-image');
+import nodeHtmlToImage from 'node-html-to-image'
+//const nodeHtmlToImage = require('node-html-to-image');
 
 const style: string = `
 @page {
@@ -71,7 +71,7 @@ class PulseController extends Controller {
           }
         },
         puppeteerArgs: {
-          args: ["--no-sandbox"],
+          args: ['--disable-gpu', '--no-sandbox', '--single-process',  '--disable-web-security'],
         },
       });
 
