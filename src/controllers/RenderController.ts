@@ -71,6 +71,7 @@ class PulseController extends Controller {
         },
         puppeteerArgs: {
           args: ['--disable-gpu', '--no-sandbox', '--single-process',  '--disable-web-security'],
+          ignoreDefaultArgs: ["--disable-extensions"]
         },
       });
 
