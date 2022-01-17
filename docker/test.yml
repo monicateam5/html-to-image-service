@@ -4,7 +4,7 @@ services:
   html2image:
     container_name: html2image
     build: ../
-    image: adele.html2image
+    image: html2image
     restart: always
     ports:
       - "22233:22233"
