@@ -88,7 +88,7 @@ class PulseController extends Controller {
         ]
     });
       const page = await browser.newPage();
-      await page.emulateMedia("print");
+      await page.emulateMediaType("print");
       await page.addStyleTag({
         content: style,
       });
