@@ -85,6 +85,7 @@ class PulseController extends Controller {
             "--disable-dev-shm-usage",
             "--disable-setuid-sandbox",
             "--no-sandbox",
+            "--no-zygote"
         ]
     });
       const page = await browser.newPage();
