@@ -14,13 +14,13 @@ pipeline {
     post {
       
         success {
-            sh 'docker save adele.html2image > /home/images/adele/adele.html2image.tar'
-            sh 'docker tag adele.html2image registry.dpdok.com.ua/adele.html2image:latest'
+            sh 'docker save adele.html2image > /home/images/eddr/html2image.tar'
+            sh 'docker tag adele.html2image registry.dpdok.com.ua/html2image:latest'
 
 
             script {
               docker.withRegistry( 'https://registry.dpdok.com.ua', 'privateregistry' ) {
-                  sh "docker push registry.dpdok.com.ua/adele.html2image:latest"
+                  sh "docker push registry.dpdok.com.ua/html2image:latest"
               }
             }
 
