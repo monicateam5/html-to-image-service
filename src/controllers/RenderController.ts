@@ -80,13 +80,10 @@ class PulseController extends Controller {
 
       const browser = await puppeteer.launch({
         headless: true,
-        args: [
-            "--disable-gpu",
-            "--disable-dev-shm-usage",
-            "--disable-setuid-sandbox",
-            "--no-sandbox",
-        ]
+        args: [ '--no-sandbox', '--single-process', '--no-zygote']
     });
+    //"--disable-gpu", "--disable-dev-shm-usage","--disable-setuid-sandbox","--no-sandbox","--no-zygote"
+
       const page = await browser.newPage();
       await page.emulateMediaType("print");
       await page.addStyleTag({
